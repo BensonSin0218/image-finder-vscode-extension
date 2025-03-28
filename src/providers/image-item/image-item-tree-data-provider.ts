@@ -1,23 +1,23 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { IMAGE_EXTENSIONS } from '../constants/images';
-import { ImageItem, ImageItemContextType } from '../models/image_item';
-import { EXTENSION_ID } from '../constants/extension';
+import { IMAGE_EXTENSIONS } from '../../constants/image';
+import { ImageTreeItem, ImageTreeItemType } from './image-tree-item';
+import { EXTENSION_ID } from '../../constants/extension';
 
-export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageItem> {
+export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<ImageTreeItem> {
 	constructor(context: vscode.ExtensionContext) {
-		this._workspaceRoot = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0
+		this.workspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0
 			? vscode.workspace.workspaceFolders[0].uri.fsPath
 			: undefined;
 
-		if (!this._workspaceRoot) {
+		if (!this.workspace) {
 			vscode.window.showErrorMessage('No workspace found');
 
 			return;
 		}
 
-		console.log(`[${ImageItemTreeDataProvider.name}] Workspace root: ${this._workspaceRoot}`);
+		console.log(`[${ImageTreeItemTreeDataProvider.name}] Workspace root: ${this.workspace}`);
 
 		const imageExtensionNames = IMAGE_EXTENSIONS.map((extension) => extension.substring(1));
 		const watcher = vscode.workspace.createFileSystemWatcher(`**/*.{${imageExtensionNames.join(',')}}`);
@@ -29,16 +29,17 @@ export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageI
 		context.subscriptions.push(watcher);
 	}
 
-	private _workspaceRoot: string | undefined;
-	private _onDidChangeTreeData: vscode.EventEmitter<ImageItem | undefined | null | void> = new vscode.EventEmitter<ImageItem | undefined | null | void>();
-	readonly onDidChangeTreeData: vscode.Event<ImageItem | undefined | null | void> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<ImageTreeItem | undefined | null | void> = new vscode.EventEmitter<ImageTreeItem | undefined | null | void>();
+	readonly onDidChangeTreeData: vscode.Event<ImageTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
+
+	private workspace: string | undefined;
 
 	refresh = () => this._onDidChangeTreeData.fire();
 
-	getTreeItem = (element: ImageItem): vscode.TreeItem => element;
+	getTreeItem = (element: ImageTreeItem): vscode.TreeItem => element;
 
-	getChildren = async (element?: ImageItem): Promise<ImageItem[]> => {
-		if (!this._workspaceRoot) {
+	getChildren = async (element?: ImageTreeItem): Promise<ImageTreeItem[]> => {
+		if (!this.workspace) {
 			vscode.window.showInformationMessage('No images found in empty workspace');
 
 			return Promise.resolve([]);
@@ -47,7 +48,7 @@ export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageI
 		if (element) {
 			return this.getImagesInDirectory(element.resourceUri.fsPath);
 		} else {
-			return this.getImagesInDirectory(this._workspaceRoot!);
+			return this.getImagesInDirectory(this.workspace!);
 		}
 	};
 
@@ -81,12 +82,12 @@ export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageI
 		}
 	};
 
-	private getImagesInDirectory = async (directoryPath: string): Promise<ImageItem[]> => {
+	private getImagesInDirectory = async (directoryPath: string): Promise<ImageTreeItem[]> => {
 		if (!fs.existsSync(directoryPath)) {
 			return [];
 		}
 
-		const items: ImageItem[] = [];
+		const items: ImageTreeItem[] = [];
 		const files = fs.readdirSync(directoryPath);
 
 		for (const file of files) {
@@ -99,11 +100,11 @@ export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageI
 
 					if (hasImages) {
 						items.push(
-							new ImageItem(
+							new ImageTreeItem(
 								file,
 								vscode.TreeItemCollapsibleState.Collapsed,
 								vscode.Uri.file(filePath),
-								ImageItemContextType.Folder
+								ImageTreeItemType.Folder
 							));
 					}
 				} catch (error) {
@@ -112,11 +113,11 @@ export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageI
 				}
 			} else if (stat.isFile() && IMAGE_EXTENSIONS.some(ext => file.toLowerCase().endsWith(ext))) {
 				items.push(
-					new ImageItem(
+					new ImageTreeItem(
 						file,
 						vscode.TreeItemCollapsibleState.None,
 						vscode.Uri.file(filePath),
-						ImageItemContextType.Image,
+						ImageTreeItemType.Image,
 						{
 							command: `${EXTENSION_ID}.openImage`,
 							title: 'Open Image',
@@ -127,10 +128,10 @@ export class ImageItemTreeDataProvider implements vscode.TreeDataProvider<ImageI
 		}
 
 		return items.sort((a, b) => {
-			if (a.contextType === ImageItemContextType.Folder && b.contextType !== ImageItemContextType.Folder) {
+			if (a.type === ImageTreeItemType.Folder && b.type !== ImageTreeItemType.Folder) {
 				return -1;
 			}
-			else if (a.contextType !== ImageItemContextType.Folder && b.contextType === ImageItemContextType.Folder) {
+			else if (a.type !== ImageTreeItemType.Folder && b.type === ImageTreeItemType.Folder) {
 				return 1;
 			}
 

@@ -1,40 +1,41 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { formatFileSize } from '../utils/file_size';
+import { formatFileSize } from '../../utils/file-size';
 
-export enum ImageItemContextType {
+export enum ImageTreeItemType {
 	Folder = 'Folder',
 	Image = 'Image',
 }
 
-export namespace ImageItemContextType {
-	export const getThemeIcon = (type: ImageItemContextType): vscode.ThemeIcon => {
+export namespace ImageTreeItemType {
+	export const getThemeIcon = (type: ImageTreeItemType): vscode.ThemeIcon => new vscode.ThemeIcon((() => {
 		switch (type) {
-		case ImageItemContextType.Folder:
-			return new vscode.ThemeIcon('folder');
+		case ImageTreeItemType.Folder:
+			return 'folder';
 
-		case ImageItemContextType.Image:
-			return new vscode.ThemeIcon('file-media');
+		case ImageTreeItemType.Image:
+			return 'file-media';
 		}
-	};
+	})());
 }
 
-export class ImageItem extends vscode.TreeItem {
+export class ImageTreeItem extends vscode.TreeItem {
 	constructor(
 		public readonly label: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly resourceUri: vscode.Uri,
-		public readonly contextType: ImageItemContextType,
+		public readonly type: ImageTreeItemType,
 		public readonly command?: vscode.Command
 	) {
 		super(label, collapsibleState);
 
-		this.iconPath = ImageItemContextType.getThemeIcon(contextType);
+		this.iconPath = ImageTreeItemType.getThemeIcon(type);
 		this.tooltip = resourceUri.fsPath;
 
-		if (contextType !== ImageItemContextType.Folder) {
+		if (type !== ImageTreeItemType.Folder) {
 			try {
 				const stat = fs.statSync(resourceUri.fsPath);
+
 				this.description = formatFileSize(stat.size);
 			} catch (error) {
 				console.error('Error getting file stats:', error);

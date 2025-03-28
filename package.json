@@ -16,8 +16,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "image-explorer.refresh",
-        "title": "Image Explorer: Refresh",
+        "command": "image-explorer.refreshAllViews",
+        "title": "Image Explorer: Refresh All Views",
         "icon": "$(refresh)"
       },
       {
@@ -38,11 +38,11 @@
     "views": {
       "image-explorer-container": [
         {
-          "id": "image-explorer.explorer",
+          "id": "image-explorer.imageItemsTreeView",
           "name": "Images"
         },
         {
-          "id": "image-explorer.details",
+          "id": "image-explorer.imageDetailItemsTreeView",
           "name": "Image Details"
         }
       ]
@@ -50,13 +50,13 @@
     "menus": {
       "view/title": [
         {
-          "command": "image-explorer.refresh",
-          "when": "view == image-explorer.explorer",
+          "command": "image-explorer.refreshAllViews",
+          "when": "view == image-explorer.imageItemsTreeView",
           "group": "navigation@1"
         },
         {
           "command": "image-explorer.revealInExplorer",
-          "when": "view == image-explorer.details",
+          "when": "view == image-explorer.imageDetailItemsTreeView",
           "group": "navigation@1"
         }
       ]

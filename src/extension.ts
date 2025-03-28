@@ -1,64 +1,51 @@
 import * as vscode from 'vscode';
+import { refreshAllViews } from './commands/refresh-all-views';
+import { revealInExplorer } from './commands/reveal-in-explorer';
 import { EXTENSION_ID } from './constants/extension';
-import { ImageItemTreeDataProvider as ImageItemsTreeDataProvider } from './providers/image_item_tree_data_provider';
-import { ImageDetailsProvider as ImageDetailItemsTreeDataProvider } from './providers/image_details_provider';
-import { ImageItemContextType } from './models/image_item';
+import { ImageDetailTreeItemsTreeDataProvider } from './providers/image-detail/image-detail-tree-items-tree-data-provider';
+import { ImageTreeItemTreeDataProvider } from './providers/image-item/image-item-tree-data-provider';
+import { ImageTreeItemType } from './providers/image-item/image-tree-item';
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log(`"${EXTENSION_ID}" is actived!`);
+	console.log(`"${EXTENSION_ID}" is activated!`);
 
-	const imageItemsTreeDataProvider = new ImageItemsTreeDataProvider(context);
-	const imageDetailItemsTreeDataProvider = new ImageDetailItemsTreeDataProvider();
+	const imageTreeItemTreeDataProvider = new ImageTreeItemTreeDataProvider(context);
+	const imageDetailTreeItemsTreeDataProvider = new ImageDetailTreeItemsTreeDataProvider();
 
-	const imagesTreeView = vscode.window.createTreeView(`${EXTENSION_ID}.explorer`, {
-		treeDataProvider: imageItemsTreeDataProvider,
+	const imageItemsTreeView = vscode.window.createTreeView(`${EXTENSION_ID}.imageItemsTreeView`, {
+		treeDataProvider: imageTreeItemTreeDataProvider,
 		showCollapseAll: true
 	});
 
-	const detailsTreeView = vscode.window.createTreeView(`${EXTENSION_ID}.details`, {
-		treeDataProvider: imageDetailItemsTreeDataProvider
-	});
-
-	imagesTreeView.onDidChangeSelection(e => {
+	imageItemsTreeView.onDidChangeSelection(e => {
 		if (e.selection.length === 0) {
 			return;
 		}
 
 		const selectedItem = e.selection[0];
 
-		if (selectedItem.contextType === ImageItemContextType.Image) {
-			imageDetailItemsTreeDataProvider.setSelectedImage(selectedItem.resourceUri);
+		if (selectedItem.type === ImageTreeItemType.Image) {
+			imageDetailTreeItemsTreeDataProvider.setSelectedImage(selectedItem.resourceUri);
 		}
 	});
 
+	const imageDetailItemsTreeView = vscode.window.createTreeView(`${EXTENSION_ID}.imageDetailItemsTreeView`, {
+		treeDataProvider: imageDetailTreeItemsTreeDataProvider
+	});
+
 	context.subscriptions.push(
-		imagesTreeView,
-		detailsTreeView,
+		imageItemsTreeView,
+		imageDetailItemsTreeView,
 	);
 
-	const refreshCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.refresh`, () => {
-		imageItemsTreeDataProvider.refresh();
-		imageDetailItemsTreeDataProvider.refresh();
-	});
+	const refreshAllViewsCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.refreshAllViews`, () => refreshAllViews([imageTreeItemTreeDataProvider, imageDetailTreeItemsTreeDataProvider]));
 
-	const openImageCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.openImage`, (resource: vscode.Uri) => {
-		vscode.commands.executeCommand('vscode.open', resource);
-	});
+	const openImageCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.openImage`, (resource: vscode.Uri) => vscode.commands.executeCommand('vscode.open', resource));
 
-	const revealInExplorerCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.revealInExplorer`, () => {
-		const resource = imageDetailItemsTreeDataProvider.getSelectedImage();
-
-		if (!resource) {
-			vscode.window.showErrorMessage('No image selected');
-
-			return;
-		}
-
-		vscode.commands.executeCommand('revealFileInOS', resource);
-	});
+	const revealInExplorerCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.revealInExplorer`, () => revealInExplorer(imageDetailTreeItemsTreeDataProvider));
 
 	context.subscriptions.push(
-		refreshCommand,
+		refreshAllViewsCommand,
 		openImageCommand,
 		revealInExplorerCommand,
 	);
