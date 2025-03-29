@@ -64,11 +64,21 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 
 		const processDirectory = async (dir: string) => {
 			try {
+				const pathBaseName = path.basename(dir);
+
+				if (pathBaseName.includes('.')) {
+					return;
+				}
+
 				const files = fs.readdirSync(dir);
 
 				for (const file of files) {
 					const filePath = path.join(dir, file);
-					const stat = fs.statSync(filePath);
+					const stat = fs.lstatSync(filePath);
+
+					if (stat.isSymbolicLink()) {
+						continue;
+					}
 
 					if (stat.isDirectory()) {
 						await processDirectory(filePath);
