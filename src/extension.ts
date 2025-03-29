@@ -2,9 +2,8 @@ import * as vscode from 'vscode';
 import { refreshAllViews } from './commands/refresh-all-views';
 import { revealInExplorer } from './commands/reveal-in-explorer';
 import { EXTENSION_ID } from './constants/extension';
-import { ImageDetailTreeItemsTreeDataProvider } from './providers/image-detail/image-detail-tree-items-tree-data-provider';
-import { ImageTreeItemTreeDataProvider } from './providers/image-item/image-item-tree-data-provider';
-import { ImageTreeItemType } from './providers/image-item/image-tree-item';
+import { ImageDetailTreeItemsTreeDataProvider } from './tree-data-providers/image-detail/image-detail-tree-items-tree-data-provider';
+import { ImageTreeItemTreeDataProvider } from './tree-data-providers/image/image-tree-item-tree-data-provider';
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log(`"${EXTENSION_ID}" is activated!`);
@@ -24,9 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const selectedItem = e.selection[0];
 
-		if (selectedItem.type === ImageTreeItemType.Image) {
-			imageDetailTreeItemsTreeDataProvider.setSelectedImage(selectedItem.resourceUri);
-		}
+		imageDetailTreeItemsTreeDataProvider.setSelectedImage(selectedItem.resourceUri);
 	});
 
 	const imageDetailItemsTreeView = vscode.window.createTreeView(`${EXTENSION_ID}.imageDetailItemsTreeView`, {
