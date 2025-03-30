@@ -37,7 +37,10 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 	private workspace: string | undefined;
 	private images: ImageTreeItem[] = [];
 
-	refresh = () => this._onDidChangeTreeData.fire();
+	refresh = () => {
+		this.findAllImagesInWorkspace(this.workspace!);
+		this._onDidChangeTreeData.fire();
+	};
 
 	getTreeItem = (element: ImageTreeItem): vscode.TreeItem => element;
 
@@ -60,13 +63,16 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 			return;
 		}
 
+		const skipHiddenDirectories = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipHiddenDirectories') ?? true;
+		const skipSymbolicLink = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipSymbolicLink') ?? true;
+
 		this.images = [];
 
 		const processDirectory = async (dir: string) => {
 			try {
 				const pathBaseName = path.basename(dir);
 
-				if (pathBaseName.includes('.')) {
+				if (skipHiddenDirectories && pathBaseName.includes('.')) {
 					return;
 				}
 
@@ -76,7 +82,7 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 					const filePath = path.join(dir, file);
 					const stat = fs.lstatSync(filePath);
 
-					if (stat.isSymbolicLink()) {
+					if (skipSymbolicLink && stat.isSymbolicLink()) {
 						continue;
 					}
 

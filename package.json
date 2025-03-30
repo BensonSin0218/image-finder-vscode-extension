@@ -60,6 +60,21 @@
           "group": "navigation@1"
         }
       ]
+    },
+    "configuration": {
+      "title": "Image Explorer",
+      "properties": {
+        "image-explorer.skipHiddenDirectories": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skip hidden directories when scanning for images"
+        },
+        "image-explorer.skipSymbolicLink": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skip symbolic links when scanning for images"
+        }
+      }
     }
   },
   "scripts": {
