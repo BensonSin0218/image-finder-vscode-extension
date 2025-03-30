@@ -94,8 +94,9 @@ export const findSimilarImages = async (
 
 async function generateHash(imagePath: string): Promise<string> {
   try {
+    const similarityImageResize = vscode.workspace.getConfiguration('image-explorer').get<number>('similarityImageResize', 32);
     const buffer = await sharp(imagePath)
-      .resize(32, 32, { fit: 'fill' })
+      .resize(similarityImageResize, similarityImageResize, { fit: 'fill' })
       .grayscale()
       .raw()
       .toBuffer();

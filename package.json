@@ -92,6 +92,11 @@
           "type": "number",
           "default": 90,
           "description": "Similarity threshold (0-100)% for finding similar images"
+        },
+        "image-explorer.similarityImageResize": {
+          "type": "number",
+          "default": 32,
+          "description": "Similarity image resize for finding similar images"
         }
       }
     }
