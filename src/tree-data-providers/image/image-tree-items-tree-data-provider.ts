@@ -5,7 +5,7 @@ import { IMAGE_EXTENSIONS } from '../../constants/image.js';
 import { ImageTreeItem, } from './image-tree-item.js';
 import { EXTENSION_ID } from '../../constants/extension.js';
 
-export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<ImageTreeItem> {
+export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<ImageTreeItem> {
 	constructor(context: vscode.ExtensionContext) {
 		this.workspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0
 			? vscode.workspace.workspaceFolders[0].uri.fsPath
@@ -17,7 +17,7 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 			return;
 		}
 
-		console.log(`[${ImageTreeItemTreeDataProvider.name}] Workspace root: ${this.workspace}`);
+		console.log(`[${ImageTreeItemsTreeDataProvider.name}] Workspace root: ${this.workspace}`);
 
 		const imageExtensionNames = IMAGE_EXTENSIONS.map((extension) => extension.substring(1));
 		const watcher = vscode.workspace.createFileSystemWatcher(`**/*.{${imageExtensionNames.join(',')}}`);
@@ -63,8 +63,8 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 			return;
 		}
 
-		const skipHiddenDirectories = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipHiddenDirectories') ?? true;
-		const skipSymbolicLink = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipSymbolicLink') ?? true;
+		const skipHiddenDirectories = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipHiddenDirectories', true);
+		const skipSymbolicLink = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipSymbolicLink', true);
 
 		this.images = [];
 
@@ -89,12 +89,9 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 					if (stat.isDirectory()) {
 						await processDirectory(filePath);
 					} else if (stat.isFile() && IMAGE_EXTENSIONS.some(ext => file.toLowerCase().endsWith(ext))) {
-						const relativePath = path.relative(this.workspace!, dir);
-						const displayPath = relativePath ? `${relativePath}/${file}` : file;
-
 						this.images.push(
 							new ImageTreeItem(
-								displayPath,
+								file,
 								vscode.TreeItemCollapsibleState.None,
 								vscode.Uri.file(filePath),
 								{
@@ -116,6 +113,8 @@ export class ImageTreeItemTreeDataProvider implements vscode.TreeDataProvider<Im
 
 		this.images.sort((a, b) => a.label!.localeCompare(b.label!));
 
-		console.log(`[${ImageTreeItemTreeDataProvider.name}] Found ${this.images.length} images in workspace`);
+		console.log(`[${ImageTreeItemsTreeDataProvider.name}] Found ${this.images.length} images in workspace`);
 	};
+
+	getAllImagesUris = () => this.images.map(image => image.uri);
 }

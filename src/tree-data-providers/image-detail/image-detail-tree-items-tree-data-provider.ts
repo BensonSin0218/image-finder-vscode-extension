@@ -10,23 +10,23 @@ export class ImageDetailTreeItemsTreeDataProvider implements vscode.TreeDataProv
   private _onDidChangeTreeData: vscode.EventEmitter<ImageDetailTreeItem | undefined | null | void> = new vscode.EventEmitter<ImageDetailTreeItem | undefined | null | void>();
   readonly onDidChangeTreeData: vscode.Event<ImageDetailTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
-  private _selectedImage: vscode.Uri | undefined;
+  private selectedImage: vscode.Uri | undefined;
 
   refresh = (): void => this._onDidChangeTreeData.fire();
 
   getTreeItem = (element: ImageDetailTreeItem): vscode.TreeItem => element;
 
   getChildren = async (element?: ImageDetailTreeItem): Promise<ImageDetailTreeItem[]> => {
-    if (!this._selectedImage) {
+    if (!this.selectedImage) {
       return [new ImageDetailTreeItem('No image selected', '', vscode.TreeItemCollapsibleState.None)];
     }
 
     try {
       const items: ImageDetailTreeItem[] = [];
-      const stats = fs.statSync(this._selectedImage.fsPath);
+      const stats = fs.statSync(this.selectedImage.fsPath);
 
-      items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Name, path.basename(this._selectedImage.fsPath), vscode.TreeItemCollapsibleState.None));
-      items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Path, path.dirname(this._selectedImage.fsPath), vscode.TreeItemCollapsibleState.None));
+      items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Name, path.basename(this.selectedImage.fsPath), vscode.TreeItemCollapsibleState.None));
+      items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Path, path.dirname(this.selectedImage.fsPath), vscode.TreeItemCollapsibleState.None));
       items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Size, formatFileSize(stats.size), vscode.TreeItemCollapsibleState.None));
       items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Created, stats.birthtime.toLocaleString(), vscode.TreeItemCollapsibleState.None));
       items.push(new ImageDetailTreeItem(ImageDetailTreeItemType.Modified, stats.mtime.toLocaleString(), vscode.TreeItemCollapsibleState.None));
@@ -38,9 +38,9 @@ export class ImageDetailTreeItemsTreeDataProvider implements vscode.TreeDataProv
   };
 
   setSelectedImage = (uri: vscode.Uri | undefined): void => {
-    this._selectedImage = uri;
+    this.selectedImage = uri;
     this.refresh();
   };
 
-  getSelectedImage = (): vscode.Uri | undefined => this._selectedImage;
+  getSelectedImage = (): vscode.Uri | undefined => this.selectedImage;
 }
