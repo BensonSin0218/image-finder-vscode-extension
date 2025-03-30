@@ -8,6 +8,7 @@ This extension is to help user to scan and display images in the workspace quick
 - Display images in the activitybar
 - Display image details in the details view
   - Reveal image in explorer
+- Find similar images
 
 ## Requirements
 
