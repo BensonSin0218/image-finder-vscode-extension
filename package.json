@@ -21,6 +21,11 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "image-explorer.openSettings",
+        "title": "Image Explorer: Open Settings",
+        "icon": "$(settings)"
+      },
+      {
         "command": "image-explorer.revealInExplorer",
         "title": "Image Explorer: Reveal in Explorer",
         "icon": "$(folder)"
@@ -62,6 +67,11 @@
           "command": "image-explorer.refreshAllViews",
           "when": "view == image-explorer.imageTreeItemsTreeView",
           "group": "navigation@1"
+        },
+        {
+          "command": "image-explorer.openSettings",
+          "when": "view == image-explorer.imageTreeItemsTreeView",
+          "group": "navigation@2"
         },
         {
           "command": "image-explorer.revealInExplorer",
