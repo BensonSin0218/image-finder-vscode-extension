@@ -22,8 +22,8 @@ export class SimilarImageTreeItemsTreeDataProvider implements vscode.TreeDataPro
     try {
       return this.similarImages.map(similarImage =>
         new SimilarImageTreeItem(
-          similarImage.uri.fsPath,
-          similarImage.similarity.toString(),
+          similarImage.uri.fsPath.split('/').pop() || '',
+          `${similarImage.similarity.toFixed(2)}%`,
           vscode.TreeItemCollapsibleState.None,
           similarImage.uri,
           {

@@ -78,25 +78,32 @@
     "configuration": {
       "title": "Image Explorer",
       "properties": {
-        "image-explorer.skipHiddenDirectories": {
-          "type": "boolean",
-          "default": true,
-          "description": "Skip hidden directories when scanning for images"
+        "image-explorer.includeDirectories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Workspace to scan for images",
+          "scope": "resource"
         },
         "image-explorer.skipSymbolicLink": {
           "type": "boolean",
           "default": true,
-          "description": "Skip symbolic links when scanning for images"
+          "description": "Skip symbolic links when scanning for images",
+          "scope": "resource"
         },
         "image-explorer.similarityThreshold": {
           "type": "number",
           "default": 90,
-          "description": "Similarity threshold (0-100)% for finding similar images"
+          "description": "Similarity threshold (0-100)% for finding similar images",
+          "scope": "resource"
         },
         "image-explorer.similarityImageResize": {
           "type": "number",
           "default": 32,
-          "description": "Similarity image resize for finding similar images"
+          "description": "Similarity image resize for finding similar images",
+          "scope": "resource"
         }
       }
     }

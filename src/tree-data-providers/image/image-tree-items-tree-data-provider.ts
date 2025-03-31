@@ -54,26 +54,26 @@ export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<I
 			return;
 		}
 
-		const skipHiddenDirectories = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipHiddenDirectories', true);
-		const skipSymbolicLink = vscode.workspace.getConfiguration('image-explorer').get<boolean>('skipSymbolicLink', true);
+		const includeDirectories = vscode.workspace.getConfiguration('image-explorer', vscode.Uri.file(this.workspace!)).get<string[]>('includeDirectories', []).map(folder => path.join(this.workspace!, folder));
+		const skipSymbolicLink = vscode.workspace.getConfiguration('image-explorer', vscode.Uri.file(this.workspace!)).get<boolean>('skipSymbolicLink', true);
 
 		this.images = [];
 
-		const processDirectory = async (dir: string) => {
+		console.log(`[${ImageTreeItemsTreeDataProvider.name}] includeDirectories: ${includeDirectories}`);
+
+		const processDirectory = async (directory: string) => {
 			try {
-				const pathBaseName = path.basename(dir);
-
-				if (skipHiddenDirectories && pathBaseName.includes('.')) {
-					return;
-				}
-
-				const files = fs.readdirSync(dir);
+				const files = fs.readdirSync(directory);
 
 				for (const file of files) {
-					const filePath = path.join(dir, file);
+					const filePath = path.join(directory, file);
 					const stat = fs.lstatSync(filePath);
 
 					if (skipSymbolicLink && stat.isSymbolicLink()) {
+						continue;
+					}
+
+					if (!includeDirectories.some(folder => filePath.startsWith(folder))) {
 						continue;
 					}
 
@@ -95,8 +95,8 @@ export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<I
 					}
 				}
 			} catch (error) {
-				vscode.window.showErrorMessage(`Error processing directory ${dir}: ${error}`);
-				console.error(`Error processing directory ${dir}:`, error);
+				vscode.window.showErrorMessage(`Error processing directory ${directory}: ${error}`);
+				console.error(`Error processing directory ${directory}:`, error);
 			}
 		};
 
@@ -104,6 +104,16 @@ export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<I
 
 		this.images.sort((a, b) => a.label!.localeCompare(b.label!));
 
+		const messageDisposable = vscode.window.withProgress(
+			{
+				location: vscode.ProgressLocation.Notification,
+				title: `Found ${this.images.length} images in workspace`,
+				cancellable: false
+			},
+			async (progress) => {
+				return new Promise<void>(resolve => setTimeout(resolve, 2000));
+			}
+		);
 		console.log(`[${ImageTreeItemsTreeDataProvider.name}] Found ${this.images.length} images in workspace`);
 	};
 

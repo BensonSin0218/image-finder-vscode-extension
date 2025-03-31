@@ -53,11 +53,6 @@ export const findSimilarImages = async (
         return;
       }
 
-      if (imageUri.fsPath === selectedImageUri.fsPath) {
-        processed++;
-        continue;
-      }
-
       try {
         const currentHash = await generateHash(imageUri.fsPath);
         if (currentHash) {
