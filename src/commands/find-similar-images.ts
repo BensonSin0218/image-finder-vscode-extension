@@ -80,8 +80,6 @@ export const findSimilarImages = async (
 
   if (similarImages.length === 0) {
     vscode.window.showErrorMessage('No similar images found.');
-
-    return;
   }
 
   similarImageTreeItemsTreeDataProvider.setSimilarImages(similarImages);
