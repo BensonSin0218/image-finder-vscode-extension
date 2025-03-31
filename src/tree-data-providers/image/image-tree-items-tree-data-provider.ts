@@ -19,15 +19,6 @@ export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<I
 
 		console.log(`[${ImageTreeItemsTreeDataProvider.name}] Workspace root: ${this.workspace}`);
 
-		const imageExtensionNames = IMAGE_EXTENSIONS.map((extension) => extension.substring(1));
-		const watcher = vscode.workspace.createFileSystemWatcher(`**/*.{${imageExtensionNames.join(',')}}`);
-
-		watcher.onDidCreate(() => this.refresh());
-		watcher.onDidDelete(() => this.refresh());
-		watcher.onDidChange(() => this.refresh());
-
-		context.subscriptions.push(watcher);
-
 		this.findAllImagesInWorkspace(this.workspace);
 	}
 
