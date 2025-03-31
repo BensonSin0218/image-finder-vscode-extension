@@ -10,7 +10,7 @@ import { SimilarImageTreeItemsTreeDataProvider } from './tree-data-providers/sim
 export function activate(context: vscode.ExtensionContext) {
 	console.log(`"${EXTENSION_ID}" is activated!`);
 
-	const imageTreeItemsTreeDataProvider = new ImageTreeItemsTreeDataProvider(context);
+	const imageTreeItemsTreeDataProvider = new ImageTreeItemsTreeDataProvider();
 	const imageDetailTreeItemsTreeDataProvider = new ImageDetailTreeItemsTreeDataProvider();
 	const similarImageTreeItemsTreeDataProvider = new SimilarImageTreeItemsTreeDataProvider();
 

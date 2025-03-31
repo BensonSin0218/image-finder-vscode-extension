@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { IMAGE_EXTENSIONS } from '../../constants/image.js';
-import { ImageTreeItem, } from './image-tree-item.js';
-import { EXTENSION_ID } from '../../constants/extension.js';
+import { IMAGE_EXTENSIONS } from '../../constants/image';
+import { ImageTreeItem } from './image-tree-item';
+import { EXTENSION_ID } from '../../constants/extension';
 
 export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<ImageTreeItem> {
-	constructor(context: vscode.ExtensionContext) {
+	constructor() {
 		this.workspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0
 			? vscode.workspace.workspaceFolders[0].uri.fsPath
 			: undefined;
