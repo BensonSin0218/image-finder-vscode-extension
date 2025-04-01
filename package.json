@@ -2,12 +2,12 @@
   "name": "image-finder",
   "displayName": "image-finder",
   "description": "Explorer view to scan and display images in the workspace",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "little-idea",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BensonSin0218/image-explorer-vscode-extension"
+    "url": "https://github.com/BensonSin0218/image-finder-vscode-extension"
   },
   "icon": "assets/icon.png",
   "engines": {
@@ -100,7 +100,9 @@
           "items": {
             "type": "string"
           },
-          "default": [],
+          "default": [
+            "/"
+          ],
           "description": "Workspace to scan for images",
           "scope": "resource"
         },
