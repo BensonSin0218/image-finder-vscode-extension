@@ -1,6 +1,6 @@
-# Image Explorer README
+# Image Finder README
 
-This extension is to help user to scan and display images in the workspace quickly.
+This extension is to help user to find and view images in the workspace quickly.
 
 ## Features
 
