@@ -1,1 +1,1 @@
-export const EXTENSION_ID = 'image-explorer';
+export const EXTENSION_ID = 'image-finder';

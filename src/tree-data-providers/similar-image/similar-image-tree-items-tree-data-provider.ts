@@ -27,7 +27,7 @@ export class SimilarImageTreeItemsTreeDataProvider implements vscode.TreeDataPro
           vscode.TreeItemCollapsibleState.None,
           similarImage.uri,
           {
-            command: 'image-explorer.openImage',
+            command: 'image-finder.openImage',
             title: 'Open Image',
             arguments: [similarImage.uri]
           }

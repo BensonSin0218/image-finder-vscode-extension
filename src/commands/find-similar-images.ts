@@ -38,7 +38,7 @@ export const findSimilarImages = async (
     return;
   }
 
-  const similarityThreshold = vscode.workspace.getConfiguration('image-explorer').get<number>('similarityThreshold', 90);
+  const similarityThreshold = vscode.workspace.getConfiguration('image-finder').get<number>('similarityThreshold', 90);
   const similarImages: SimilarImage[] = [];
 
   await vscode.window.withProgress({
@@ -87,7 +87,7 @@ export const findSimilarImages = async (
 
 async function generateHash(imagePath: string): Promise<string> {
   try {
-    const similarityImageResize = vscode.workspace.getConfiguration('image-explorer').get<number>('similarityImageResize', 32);
+    const similarityImageResize = vscode.workspace.getConfiguration('image-finder').get<number>('similarityImageResize', 32);
     const buffer = await sharp(imagePath)
       .resize(similarityImageResize, similarityImageResize, { fit: 'fill' })
       .grayscale()

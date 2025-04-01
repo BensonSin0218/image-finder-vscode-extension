@@ -1,8 +1,15 @@
 {
-  "name": "image-explorer",
-  "displayName": "image-explorer",
+  "name": "image-finder",
+  "displayName": "image-finder",
   "description": "Explorer view to scan and display images in the workspace",
-  "version": "0.1.4",
+  "version": "0.1.5",
+  "publisher": "little-idea",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BensonSin0218/image-explorer-vscode-extension"
+  },
+  "icon": "assets/icon.png",
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -16,22 +23,22 @@
   "contributes": {
     "commands": [
       {
-        "command": "image-explorer.refreshAllViews",
+        "command": "image-finder.refreshAllViews",
         "title": "Image Explorer: Refresh All Views",
         "icon": "$(refresh)"
       },
       {
-        "command": "image-explorer.openSettings",
+        "command": "image-finder.openSettings",
         "title": "Image Explorer: Open Settings",
         "icon": "$(settings)"
       },
       {
-        "command": "image-explorer.revealInExplorer",
+        "command": "image-finder.revealInExplorer",
         "title": "Image Explorer: Reveal in Explorer",
         "icon": "$(folder)"
       },
       {
-        "command": "image-explorer.findSimilarImages",
+        "command": "image-finder.findSimilarImages",
         "title": "Image Explorer: Find Similar Images",
         "icon": "$(search-view-icon)"
       }
@@ -39,24 +46,24 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "image-explorer-container",
+          "id": "image-finder-container",
           "title": "Image Explorer",
           "icon": "$(file-media)"
         }
       ]
     },
     "views": {
-      "image-explorer-container": [
+      "image-finder-container": [
         {
-          "id": "image-explorer.imageTreeItemsTreeView",
+          "id": "image-finder.imageTreeItemsTreeView",
           "name": "Images"
         },
         {
-          "id": "image-explorer.imageDetailTreeItemsTreeView",
+          "id": "image-finder.imageDetailTreeItemsTreeView",
           "name": "Image Details"
         },
         {
-          "id": "image-explorer.similarImageTreeItemsTreeView",
+          "id": "image-finder.similarImageTreeItemsTreeView",
           "name": "Similar Images"
         }
       ]
@@ -64,23 +71,23 @@
     "menus": {
       "view/title": [
         {
-          "command": "image-explorer.refreshAllViews",
-          "when": "view == image-explorer.imageTreeItemsTreeView",
+          "command": "image-finder.refreshAllViews",
+          "when": "view == image-finder.imageTreeItemsTreeView",
           "group": "navigation@1"
         },
         {
-          "command": "image-explorer.openSettings",
-          "when": "view == image-explorer.imageTreeItemsTreeView",
+          "command": "image-finder.openSettings",
+          "when": "view == image-finder.imageTreeItemsTreeView",
           "group": "navigation@2"
         },
         {
-          "command": "image-explorer.revealInExplorer",
-          "when": "view == image-explorer.imageDetailTreeItemsTreeView",
+          "command": "image-finder.revealInExplorer",
+          "when": "view == image-finder.imageDetailTreeItemsTreeView",
           "group": "navigation@1"
         },
         {
-          "command": "image-explorer.findSimilarImages",
-          "when": "view == image-explorer.similarImageTreeItemsTreeView",
+          "command": "image-finder.findSimilarImages",
+          "when": "view == image-finder.similarImageTreeItemsTreeView",
           "group": "navigation@1"
         }
       ]
@@ -88,7 +95,7 @@
     "configuration": {
       "title": "Image Explorer",
       "properties": {
-        "image-explorer.includeDirectories": {
+        "image-finder.includeDirectories": {
           "type": "array",
           "items": {
             "type": "string"
@@ -97,19 +104,19 @@
           "description": "Workspace to scan for images",
           "scope": "resource"
         },
-        "image-explorer.skipSymbolicLink": {
+        "image-finder.skipSymbolicLink": {
           "type": "boolean",
           "default": true,
           "description": "Skip symbolic links when scanning for images",
           "scope": "resource"
         },
-        "image-explorer.similarityThreshold": {
+        "image-finder.similarityThreshold": {
           "type": "number",
           "default": 90,
           "description": "Similarity threshold (0-100)% for finding similar images",
           "scope": "resource"
         },
-        "image-explorer.similarityImageResize": {
+        "image-finder.similarityImageResize": {
           "type": "number",
           "default": 32,
           "description": "Similarity image resize for finding similar images",

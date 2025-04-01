@@ -54,8 +54,8 @@ export class ImageTreeItemsTreeDataProvider implements vscode.TreeDataProvider<I
 			return;
 		}
 
-		const includeDirectories = vscode.workspace.getConfiguration('image-explorer', vscode.Uri.file(this.workspace!)).get<string[]>('includeDirectories', []).map(folder => path.join(this.workspace!, folder));
-		const skipSymbolicLink = vscode.workspace.getConfiguration('image-explorer', vscode.Uri.file(this.workspace!)).get<boolean>('skipSymbolicLink', true);
+		const includeDirectories = vscode.workspace.getConfiguration('image-finder', vscode.Uri.file(this.workspace!)).get<string[]>('includeDirectories', []).map(folder => path.join(this.workspace!, folder));
+		const skipSymbolicLink = vscode.workspace.getConfiguration('image-finder', vscode.Uri.file(this.workspace!)).get<boolean>('skipSymbolicLink', true);
 
 		this.images = [];
 

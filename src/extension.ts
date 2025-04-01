@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const refreshAllViewsCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.refreshAllViews`, () => refreshAllViews([imageTreeItemsTreeDataProvider, imageDetailTreeItemsTreeDataProvider]));
 
-	const openSettingsCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.openSettings`, () => vscode.commands.executeCommand('workbench.action.openSettings', 'image-explorer'));
+	const openSettingsCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.openSettings`, () => vscode.commands.executeCommand('workbench.action.openSettings', 'image-finder'));
 
 	const openImageCommand = vscode.commands.registerCommand(`${EXTENSION_ID}.openImage`, (resource: vscode.Uri) => vscode.commands.executeCommand('vscode.open', resource));
 
