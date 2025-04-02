@@ -24,22 +24,22 @@
     "commands": [
       {
         "command": "image-finder.refreshAllViews",
-        "title": "Image Explorer: Refresh All Views",
+        "title": "Image Finder: Refresh All Views",
         "icon": "$(refresh)"
       },
       {
         "command": "image-finder.openSettings",
-        "title": "Image Explorer: Open Settings",
+        "title": "Image Finder: Open Settings",
         "icon": "$(settings)"
       },
       {
         "command": "image-finder.revealInExplorer",
-        "title": "Image Explorer: Reveal in Explorer",
+        "title": "Image Finder: Reveal in Explorer",
         "icon": "$(folder)"
       },
       {
         "command": "image-finder.findSimilarImages",
-        "title": "Image Explorer: Find Similar Images",
+        "title": "Image Finder: Find Similar Images",
         "icon": "$(search-view-icon)"
       }
     ],
@@ -47,7 +47,7 @@
       "activitybar": [
         {
           "id": "image-finder-container",
-          "title": "Image Explorer",
+          "title": "Image Finder",
           "icon": "$(file-media)"
         }
       ]
@@ -93,7 +93,7 @@
       ]
     },
     "configuration": {
-      "title": "Image Explorer",
+      "title": "Image Finder",
       "properties": {
         "image-finder.includeDirectories": {
           "type": "array",
