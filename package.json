@@ -2,7 +2,7 @@
   "name": "image-finder",
   "displayName": "image-finder",
   "description": "Explorer view to scan and display images in the workspace",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "little-idea",
   "license": "MIT",
   "repository": {
