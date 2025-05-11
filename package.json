@@ -2,7 +2,7 @@
   "name": "image-finder",
   "displayName": "image-finder",
   "description": "Explorer view to scan and display images in the workspace",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "publisher": "little-idea",
   "license": "MIT",
   "repository": {
@@ -128,12 +128,13 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
+    "vscode:prepublish": "npm run compile && npm run install-sharp",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "pnpm run compile && pnpm run lint",
+    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "install-sharp": "npm install --os=win32 --cpu=x64 sharp && npm install --platform=darwin --arch=x64 sharp && npm install --platform=linux --arch=x64 sharp"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
